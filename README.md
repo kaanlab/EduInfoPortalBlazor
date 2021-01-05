@@ -1,0 +1,2 @@
+# EduInfoPortalBlazor
+ \EduInfoPortalBlazor
