@@ -1,0 +1,76 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@cities" Hover="true" >
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddCity" Class="mr-3" />
+        <MudText Typo="Typo.h6">Города</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Название">@context.Name</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Edit" Color="Color.Info" OnClick="@((e) => UpdateCity(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Delete" Color="Color.Error" OnClick="@((e) => DeleteCity(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<City> cities = null;
+
+
+    protected override void OnInitialized()
+    {
+        cities = Storage.GetCities().ToList();
+    }
+
+    private async Task AddCity()
+    {
+        var dialog = Dialog.Show<CityAddOrUpdate>("Новый город");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedCity = await Storage.AddCity(dialog.Result.Result.Data as City);
+            cities.Add(addedCity);
+            Snackbar.Add("Новый город добавлен!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateCity(City city)
+    {
+        var parameters = new DialogParameters { ["city"] = city };
+        var dialog = Dialog.Show<CityAddOrUpdate>("Редактирование города", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedCity = await Storage.UpdateCity(dialog.Result.Result.Data as City);
+            var index = cities.IndexOf(city);
+            cities.Remove(city);
+            cities.Insert(index, updatedCity);
+            Snackbar.Add("Информация о городе успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteCity(City city)
+    {
+        var parameters = new DialogParameters { ["city"] = city };
+        var dialog = Dialog.Show<CityDelete>("Удаление города", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedCity = await Storage.DeleteCity(dialog.Result.Result.Data as City);
+            cities.Remove(deletedCity);
+            Snackbar.Add("Город успешно удален!", Severity.Success);
+        }
+    }
+
+}

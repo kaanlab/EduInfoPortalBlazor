@@ -8,7 +8,7 @@ namespace EduInfoPortalBlazor.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(EduInfoDbContext context)
+        public static void Initialize(StorageService context)
         {
             context.Database.EnsureCreated();
             if (context.Institutions.Any())

@@ -1,0 +1,15 @@
+﻿@inherits LayoutComponentBase
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudDrawerHeader>
+            <MudText Typo="Typo.h5" Class="mt-1">Панель управления</MudText>
+        </MudDrawerHeader>
+    </MudAppBar>
+
+    <MudMainContent Class="bg-control-panel">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

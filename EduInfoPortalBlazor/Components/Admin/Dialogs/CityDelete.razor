@@ -1,0 +1,23 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField Value="@City.Name" Label="Название" ReadOnly="true" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton Color="Color.Info" OnClick="Delete">Удалить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public City City { get; set; } = new City();
+
+    void Cancel() => MudDialog.Cancel();
+
+    void Delete() => MudDialog.Close(DialogResult.Ok(City));
+}
+

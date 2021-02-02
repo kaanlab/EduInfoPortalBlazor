@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,20 +12,21 @@ namespace EduInfoPortalBlazor.Models
     public class Faculty
     {
         public int Id { get; set; }
-        public Institution Institution { get; set; }
-        public Specialty Specialty { get; set; }
+        public string Name { get; set; }
         public Direction Direction { get; set; }
-        public Budget Budget { get; set; }
-        public Paid Paid { get; set; }
+
+        //
+        public Institution Institution { get; set; }
+        public ICollection<Specialty> Specialties { get; set; }
     }
 
 
     // Направление обучения
     public enum Direction
     {
-        // Гражданский
+        [Display(Name = "Гражданский")]
         Civil,
-        // Военный
+        [Display(Name = "Военный")]
         Military
     }
 }

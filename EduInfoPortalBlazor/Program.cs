@@ -37,7 +37,7 @@ namespace EduInfoPortalBlazor
 
                 try
                 {
-                    var context = services.GetRequiredService<EduInfoDbContext>();
+                    var context = services.GetRequiredService<StorageService>();
                     //context.Database.EnsureCreated();
 
                     // ƒобавить наши тестовые данные в базу
