@@ -21,10 +21,12 @@ namespace EduInfoPortalBlazor.Models
 
     public enum Type
     {
-        [Display(Name = "Академия")]
-        Academy,
+        [Display(Name = "Федеральный университет")]
+        FUniversity,
         [Display(Name = "Университет")]
         University,
+        [Display(Name = "Академия")]
+        Academy,
         [Display(Name = "Институт")]
         Institute
     }

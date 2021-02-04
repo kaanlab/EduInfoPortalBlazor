@@ -1,0 +1,76 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@professions" Hover="true">
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddProfession" Class="mr-3" />
+        <MudText Typo="Typo.h6">Предметы по ЕГЭ</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Название">@context.Name</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Edit" Color="Color.Info" OnClick="@((e) => UpdateProfession(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Delete" Color="Color.Error" OnClick="@((e) => DeleteProfession(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<Profession> professions = null;
+
+
+    protected override void OnInitialized()
+    {
+        professions = Storage.GetProfessions().ToList();
+    }
+
+    private async Task AddProfession()
+    {
+        var dialog = Dialog.Show<ProfessionAddOrUpdate>("Новая профессия");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedProfession = await Storage.AddProfession(dialog.Result.Result.Data as Profession);
+            professions.Add(addedProfession);
+            Snackbar.Add("Новая профессия добавлена!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateProfession(Profession profession)
+    {
+        var parameters = new DialogParameters { ["profession"] = profession };
+        var dialog = Dialog.Show<ProfessionAddOrUpdate>("Редактирование профессии", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedProfession = await Storage.UpdateProfession(dialog.Result.Result.Data as Profession);
+            var index = professions.IndexOf(profession);
+            professions.Remove(profession);
+            professions.Insert(index, updatedProfession);
+            Snackbar.Add("Информация о профессии успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteProfession(Profession profession)
+    {
+        var parameters = new DialogParameters { ["profession"] = profession };
+        var dialog = Dialog.Show<ProfessionDelete>("Удаление профессии", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedProfession = await Storage.DeleteProfession(dialog.Result.Result.Data as Profession);
+            professions.Remove(deletedProfession);
+            Snackbar.Add("Профессия успешно удалена!", Severity.Success);
+        }
+    }
+}
+

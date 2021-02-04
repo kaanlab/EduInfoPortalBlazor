@@ -18,7 +18,9 @@ namespace EduInfoPortalBlazor.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Institution>().Property(e => e.Type).HasConversion<string>();
+            modelBuilder.Entity<Faculty>().Property(e => e.Direction).HasConversion<string>();
         }
+
 
         #region Cities
 
@@ -28,26 +30,29 @@ namespace EduInfoPortalBlazor.Data
 
         public async Task<City> AddCity(City city)
         {
-            EntityEntry<City> cityEntityEntry = await this.Cities.AddAsync(city);
+            var cityEntry = await this.Cities.AddAsync(city);
             await this.SaveChangesAsync();
-            return cityEntityEntry.Entity;
+            return cityEntry.Entity;
         }
 
         public async Task<City> UpdateCity(City city)
         {
-            EntityEntry<City> cityEntityEntry = this.Cities.Update(city);
+            var updatedCity = await this.Cities.FirstOrDefaultAsync(o => o.Id == city.Id);
+            var cityEntry = this.Cities.Update(updatedCity);
             await this.SaveChangesAsync();
-            return cityEntityEntry.Entity;
+            return cityEntry.Entity;
         }
 
         public async Task<City> DeleteCity(City city)
         {
-            EntityEntry<City> cityEntityEntry = this.Cities.Remove(city);
+            var deletedCity = await this.Cities.FirstOrDefaultAsync(o => o.Id == city.Id);
+            var cityEntry = this.Cities.Remove(deletedCity);
             await this.SaveChangesAsync();
-            return cityEntityEntry.Entity;
+            return cityEntry.Entity;
         }
 
         #endregion
+
 
         #region Institutions
         public DbSet<Institution> Institutions { get; set; }
@@ -91,16 +96,76 @@ namespace EduInfoPortalBlazor.Data
         public async Task<Institution> DeleteInstitution(Institution institution)
         {
             var deletedInstitution = await this.Institutions.FirstOrDefaultAsync(o => o.Id == institution.Id);
-            
+
             var institutionEntry = this.Institutions.Remove(deletedInstitution);
             await this.SaveChangesAsync();
- 
+
             return institutionEntry.Entity;
         }
 
+        #endregion
+
+
+        #region Exams
+        public DbSet<Exam> Exams { get; set; }
+
+        public IQueryable<Exam> GetExams() => this.Exams.AsNoTracking().AsQueryable();
+
+        public async Task<Exam> AddExam(Exam exam)
+        {
+            var examEntry = await this.Exams.AddAsync(exam);
+            await this.SaveChangesAsync();
+            return examEntry.Entity;
+        }
+
+        public async Task<Exam> UpdateExam(Exam exam)
+        {
+            var updatedExam = await this.Exams.FirstOrDefaultAsync(o => o.Id == exam.Id);
+            var examEntry = this.Exams.Update(updatedExam);
+            await this.SaveChangesAsync();
+            return examEntry.Entity;
+        }
+
+        public async Task<Exam> DeleteExam(Exam exam)
+        {
+            var deletedExam = await this.Exams.FirstOrDefaultAsync(o => o.Id == exam.Id);
+            var examEntry = this.Exams.Remove(deletedExam);
+            await this.SaveChangesAsync();
+            return examEntry.Entity;
+        }
 
         #endregion
 
+
+        #region Professions
+        public DbSet<Profession> Professions { get; set; }
+
+        public IQueryable<Profession> GetProfessions() => this.Professions.AsNoTracking().AsQueryable();
+
+        public async Task<Profession> AddProfession(Profession profession)
+        {
+            var professionEntry = await this.Professions.AddAsync(profession);
+            await this.SaveChangesAsync();
+            return professionEntry.Entity;
+        }
+
+        public async Task<Profession> UpdateProfession(Profession profession)
+        {
+            var updatedProfession = await this.Professions.FirstOrDefaultAsync(o => o.Id == profession.Id);
+            var professionEntry = this.Professions.Update(updatedProfession);
+            await this.SaveChangesAsync();
+            return professionEntry.Entity;
+        }
+
+        public async Task<Profession> DeleteProfession(Profession profession)
+        {
+            var deletedProfession = await this.Professions.FirstOrDefaultAsync(o => o.Id == profession.Id);
+            var professionEntry = this.Professions.Remove(deletedProfession);
+            await this.SaveChangesAsync();
+            return professionEntry.Entity;
+        }
+
+        #endregion
     }
 }
 

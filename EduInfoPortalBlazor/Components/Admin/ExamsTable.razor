@@ -1,0 +1,76 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@exams" Hover="true">
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddExam" Class="mr-3" />
+        <MudText Typo="Typo.h6">Предметы по ЕГЭ</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Название">@context.Name</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Edit" Color="Color.Info" OnClick="@((e) => UpdateExam(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Delete" Color="Color.Error" OnClick="@((e) => DeleteExam(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<Exam> exams = null;
+
+
+    protected override void OnInitialized()
+    {
+        exams = Storage.GetExams().ToList();
+    }
+
+    private async Task AddExam()
+    {
+        var dialog = Dialog.Show<ExamAddOrUpdate>("Новый предмет");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedExam = await Storage.AddExam(dialog.Result.Result.Data as Exam);
+            exams.Add(addedExam);
+            Snackbar.Add("Новый предмет добавлен!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateExam(Exam exam)
+    {
+        var parameters = new DialogParameters { ["exam"] = exam };
+        var dialog = Dialog.Show<ExamAddOrUpdate>("Редактирование предмета", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedExam = await Storage.UpdateExam(dialog.Result.Result.Data as Exam);
+            var index = exams.IndexOf(exam);
+            exams.Remove(exam);
+            exams.Insert(index, updatedExam);
+            Snackbar.Add("Информация о предмете успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteExam(Exam exam)
+    {
+        var parameters = new DialogParameters { ["exam"] = exam };
+        var dialog = Dialog.Show<ExamDelete>("Удаление предмета", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedExam = await Storage.DeleteExam(dialog.Result.Result.Data as Exam);
+            exams.Remove(deletedExam);
+            Snackbar.Add("Предмет успешно удален!", Severity.Success);
+        }
+    }
+}
+
