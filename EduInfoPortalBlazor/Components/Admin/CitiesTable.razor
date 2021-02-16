@@ -4,7 +4,7 @@
 
 <MudTable Class="my-5" Items="@cities" Hover="true" >
     <ToolBarContent>
-        <MudIconButton Icon="@Icons.Material.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddCity" Class="mr-3" />
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddCity" Class="mr-3" />
         <MudText Typo="Typo.h6">Города</MudText>
     </ToolBarContent>
     <HeaderContent>
@@ -15,10 +15,10 @@
     <RowTemplate>
         <MudTd DataLabel="Название">@context.Name</MudTd>
         <MudTd>
-            <MudIconButton Icon="@Icons.Material.Edit" Color="Color.Info" OnClick="@((e) => UpdateCity(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@((e) => UpdateCity(context))" />
         </MudTd>
         <MudTd>
-            <MudIconButton Icon="@Icons.Material.Delete" Color="Color.Error" OnClick="@((e) => DeleteCity(context))" />
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@((e) => DeleteCity(context))" />
         </MudTd>
     </RowTemplate>
 </MudTable>

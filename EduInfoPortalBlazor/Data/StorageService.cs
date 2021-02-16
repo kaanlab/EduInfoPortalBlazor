@@ -166,6 +166,40 @@ namespace EduInfoPortalBlazor.Data
         }
 
         #endregion
+
+
+        #region Specialities
+        #endregion
+
+
+        #region Faculties
+        public DbSet<Faculty> Faculties { get; set; }
+
+        public IQueryable<Faculty> GetFaculties() => this.Faculties.AsNoTracking().AsQueryable();
+
+        public async Task<Faculty> AddFaculty(Faculty faculty)
+        {
+            var facultyEntry = await this.Faculties.AddAsync(faculty);
+            await this.SaveChangesAsync();
+            return facultyEntry.Entity;
+        }
+
+        public async Task<Faculty> UpdateFaculty(Faculty faculty)
+        {
+            var updatedFaculty = await this.Faculties.FirstOrDefaultAsync(o => o.Id == faculty.Id);
+            var facultyEntry = this.Faculties.Update(updatedFaculty);
+            await this.SaveChangesAsync();
+            return facultyEntry.Entity;
+        }
+
+        public async Task<Faculty> DeleteFaculty(Faculty faculty)
+        {
+            var deletedFaculty = await this.Faculties.FirstOrDefaultAsync(o => o.Id == faculty.Id);
+            var facultyEntry = this.Faculties.Remove(deletedFaculty);
+            await this.SaveChangesAsync();
+            return facultyEntry.Entity;
+        }
+        #endregion
     }
 }
 

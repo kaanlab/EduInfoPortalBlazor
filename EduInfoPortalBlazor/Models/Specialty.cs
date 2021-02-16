@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace EduInfoPortalBlazor.Models
 {
-    // Профессия
+    // Специальности
     public class Specialty
     {
         public int Id { get; set; }

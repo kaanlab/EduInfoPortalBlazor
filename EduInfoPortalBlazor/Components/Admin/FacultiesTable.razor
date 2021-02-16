@@ -1,0 +1,76 @@
+﻿@using EduInfoPortalBlazor.Extensions
+@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@faculties" Hover="true">
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddFaculty" Class="mr-3" />
+        <MudText Typo="Typo.h6">Факультеты</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh>Направление</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Название">@context.Name</MudTd>
+        <MudTd DataLabel="Направление">@context.Direction.GetDisplayName()</MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@((e) => UpdateFaculty(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@((e) => DeleteFaculty(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<Faculty> faculties = null;
+
+
+    protected override void OnInitialized()
+    {
+        faculties = Storage.GetFaculties().ToList();
+    }
+
+    private async Task AddFaculty()
+    {
+        var dialog = Dialog.Show<FacultyAddOrUpdate>("Новый факультет");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedFaculty = await Storage.AddFaculty(dialog.Result.Result.Data as Faculty);
+            faculties.Add(addedFaculty);
+            Snackbar.Add("Новый факультет успешно добавлен!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateFaculty(Faculty faculty)
+    {
+        var parameters = new DialogParameters { ["faculty"] = faculty };
+        var dialog = Dialog.Show<FacultyAddOrUpdate>("Редактирование факультета", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedFaculty = await Storage.UpdateFaculty(dialog.Result.Result.Data as Faculty);
+            var index = faculties.IndexOf(faculty);
+            faculties.Remove(faculty);
+            faculties.Insert(index, updatedFaculty);
+            Snackbar.Add("Информация о учебном заведении успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteFaculty(Faculty faculty)
+    {
+        var parameters = new DialogParameters { ["faculty"] = faculty };
+        var dialog = Dialog.Show<FacultyDelete>("Удаление факультета", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedFaculty = await Storage.DeleteFaculty(dialog.Result.Result.Data as Faculty);
+            faculties.Remove(deletedFaculty);
+            Snackbar.Add("Факультет успешно удален!", Severity.Success);
+        }
+    }
+}

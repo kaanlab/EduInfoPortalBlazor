@@ -11,15 +11,21 @@ namespace EduInfoPortalBlazor.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        [Required(ErrorMessage = "Это поле обязательно для заполнения!")]
+        [RegularExpression("([0-9]+)")]
+        [MinLength(6), MaxLength(6)]
+        public int Index { get; set; }
         public string Address { get; set; }
-        public Type Type { get; set; }
+        public InstitutionType Type { get; set; }
 
         //
+        [Required(ErrorMessage = "Это поле обязательно для заполнения!")]
         public City City { get; set; }
+        [Required(ErrorMessage = "Это поле обязательно для заполнения!")]
         public ICollection<Faculty> Faculties { get; set; }
     }
 
-    public enum Type
+    public enum InstitutionType
     {
         [Display(Name = "Федеральный университет")]
         FUniversity,

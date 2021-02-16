@@ -1,0 +1,116 @@
+﻿@using System.Collections.Immutable
+@using EduInfoPortalBlazor.Extensions
+@inject StorageService Storage
+
+<MudDialog>
+    <DialogContent>
+        <EditForm EditContext="@editContext">
+            <DataAnnotationsValidator />
+
+            <MudTextField Label="Название" @bind-Value="Institution.Name" For="@(() => Institution.Name)" />
+            <MudIntField Label="Индекс" @bind-Value="Institution.Index" For="@(() => Institution.Index)" />
+            <MudItem xs="12" md="12">
+
+                @if (cities.Any())
+                {
+                    <MudSelect T="City" Label="Город" HelperText="Выберете город" @bind-Value="selectedCity" ToStringFunc="cityConverter">
+                        @foreach (var city in cities)
+                        {
+                            <MudSelectItem Value="city" />
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudSelect Disabled="true" Label="Таблица города пустая..." HelperText="Выберете город" T="string" />
+                }
+
+            </MudItem>
+
+            <MudTextField Label="Адрес" @bind-Value="Institution.Address" For="@(() => Institution.Address)" />
+
+            <MudItem xs="12" md="12">
+                <MudSelect T="InstitutionType" Label="Тип учебного заведения" HelperText="Выберете тип учебного заведения" @bind-Value="Institution.Type" For="@(() => Institution.Type)">
+                    @foreach (InstitutionType type in Enum.GetValues(typeof(InstitutionType)))
+                    {
+                        <MudSelectItem Value="type">@type.GetDisplayName()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+
+            <MudItem xs="12" md="12">
+
+                @if (faculties.Any())
+                {
+                    <MudSelect T="Faculty" Label="Факультеты" HelperText="Выберете факультеты" MultiSelection="true" @bind-Value="value" @bind-SelectedValues="selectedFaculties" ToStringFunc="facultyConverter">
+                        @foreach (var faculty in faculties)
+                        {
+                            <MudSelectItem T="Faculty" Value="faculty">@faculty.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudSelect Disabled="true" Label="Таблица факультеты пустая..." HelperText="Выберете факультеты" T="string" />
+                }
+
+            </MudItem>
+
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Info" OnClick="AddOrUpdate" Disabled="@formInvalid">Сохранить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Institution Institution { get; set; } = new Institution();
+
+    private ImmutableArray<City> cities;
+    private City selectedCity { get; set; } = new City() { };
+
+    private ImmutableArray<Faculty> faculties;
+    private Faculty value { get; set; } = new Faculty() { };
+    private HashSet<Faculty> selectedFaculties { get; set; } = new HashSet<Faculty>() { };
+
+    private bool formInvalid = true;
+    private EditContext editContext;
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Institution);
+        editContext.OnFieldChanged += HandleFieldChanged;
+
+        cities = Storage.GetCities().ToImmutableArray();
+        if (Institution.City is { })
+            selectedCity = Institution.City;
+
+        faculties = Storage.GetFaculties().ToImmutableArray();
+        if (Institution.Faculties is { })
+            selectedFaculties = Institution.Faculties.ToHashSet();
+    }
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        formInvalid = !editContext.Validate();
+        StateHasChanged();
+    }
+
+    void AddOrUpdate()
+    {
+        Institution.City = selectedCity;
+        MudDialog.Close(DialogResult.Ok(Institution));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+    Func<City, string> cityConverter = p => p?.Name;
+    Func<Faculty, string> facultyConverter = p => p?.Name;
+}

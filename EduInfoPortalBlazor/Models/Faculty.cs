@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace EduInfoPortalBlazor.Models
 {
     
-    // Рассматриваем только высшее образование
+    // Факультеты. Рассматриваем только высшее образование
     public class Faculty
     {
         public int Id { get; set; }

@@ -1,0 +1,94 @@
+﻿@using EduInfoPortalBlazor.Extensions
+@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@institutions" Hover="true">
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddInstitution" Class="mr-3" />
+        <MudText Typo="Typo.h6">Учебные заведения</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Название</MudTh>
+        <MudTh>Город</MudTh>
+        <MudTh>Адрес</MudTh>
+        <MudTh>Тип учебного заведения</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Название">@context.Name</MudTd>
+        <MudTd DataLabel="Индекс">@context.Index</MudTd>
+        <MudTd DataLabel="Город">@context.City?.Name</MudTd>
+        <MudTd DataLabel="Адрес">@context.Address</MudTd>
+        <MudTd DataLabel="Тип учебного заведения">@context.Type.GetDisplayName()</MudTd>
+        <MudTd DataLabel="Факультеты">
+            @if (context.Faculties is { })
+            {
+                @foreach (var faculty in context.Faculties)
+                {
+                    <MudChip Text="purple" Color="Color.Primary">@faculty.Name</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip Text="red" Color="Color.Error">факультеты отсутствуют</MudChip>
+            }
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@((e) => UpdateInstitution(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@((e) => DeleteInstitution(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<Institution> institutions = null;
+
+
+    protected override void OnInitialized()
+    {
+        institutions = Storage.GetInstitutions().ToList();
+    }
+
+    private async Task AddInstitution()
+    {
+        var dialog = Dialog.Show<InstitutionAddOrUpdate>("Новое учебное заведение");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedInstitution = await Storage.AddInstitution(dialog.Result.Result.Data as Institution);
+            institutions.Add(addedInstitution);
+            Snackbar.Add("Новое учебное заведение добавлено!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateInstitution(Institution institution)
+    {
+        var parameters = new DialogParameters { ["institution"] = institution };
+        var dialog = Dialog.Show<InstitutionAddOrUpdate>("Редактирование учебного заведения", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedInstitution = await Storage.UpdateInstitution(dialog.Result.Result.Data as Institution);
+            var index = institutions.IndexOf(institution);
+            institutions.Remove(institution);
+            institutions.Insert(index, updatedInstitution);
+            Snackbar.Add("Информация об учебном заведении успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteInstitution(Institution institution)
+    {
+        var parameters = new DialogParameters { ["institution"] = institution };
+        var dialog = Dialog.Show<InstitutionDelete>("Удаление учебного заведения", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedInstitution = await Storage.DeleteInstitution(dialog.Result.Result.Data as Institution);
+            institutions.Remove(deletedInstitution);
+            Snackbar.Add("Учебное заведение успешно удалено!", Severity.Success);
+        }
+    }
+}
