@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduInfoPortalBlazor.Migrations
 {
     [DbContext(typeof(StorageService))]
-    [Migration("20210216133446_InitMigration")]
+    [Migration("20210217083817_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,9 +82,10 @@ namespace EduInfoPortalBlazor.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Index")
+                    b.Property<string>("Index")
+                        .IsRequired()
                         .HasMaxLength(6)
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");

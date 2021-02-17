@@ -3,14 +3,16 @@ using System;
 using EduInfoPortalBlazor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EduInfoPortalBlazor.Migrations
 {
     [DbContext(typeof(StorageService))]
-    partial class StorageServiceModelSnapshot : ModelSnapshot
+    [Migration("20210217091357_UpdateInstitutionTable")]
+    partial class UpdateInstitutionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace EduInfoPortalBlazor.Migrations
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Specialties");
+                    b.ToTable("Specialty");
                 });
 
             modelBuilder.Entity("ExamSpecialty", b =>

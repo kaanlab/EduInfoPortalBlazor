@@ -1,5 +1,51 @@
-﻿<h3>FacultyAddOrUpdate</h3>
+﻿@using EduInfoPortalBlazor.Extensions
+
+<MudDialog>
+    <DialogContent>
+        <EditForm EditContext="@editContext">
+            <DataAnnotationsValidator />
+            <MudTextField Label="Название" @bind-Value="Faculty.Name" For="@(() => Faculty.Name)" />
+            <MudItem xs="12" md="12">
+                <MudSelect T="FacultyDirection" Label="Направление обучения" HelperText="Выберете направление обучения" @bind-Value="Faculty.Direction" For="@(() => Faculty.Direction)">
+                    @foreach (FacultyDirection type in Enum.GetValues(typeof(FacultyDirection)))
+                    {
+                        <MudSelectItem Value="type">@type.GetDisplayName()</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Info" OnClick="AddOrUpdate" Disabled="@formInvalid">Сохранить</MudButton>
+    </DialogActions>
+</MudDialog>
 
 @code {
 
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Faculty Faculty { get; set; } = new Faculty();
+
+    private bool formInvalid = true;
+    private EditContext editContext;
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Faculty);
+        editContext.OnFieldChanged += HandleFieldChanged;
+    }
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        formInvalid = !editContext.Validate();
+        StateHasChanged();
+    }
+
+    void AddOrUpdate() => MudDialog.Close(DialogResult.Ok(Faculty));
+
+    void Cancel() => MudDialog.Cancel();
 }

@@ -13,7 +13,7 @@ namespace EduInfoPortalBlazor.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Direction Direction { get; set; }
+        public FacultyDirection Direction { get; set; }
 
         //
         public Institution Institution { get; set; }
@@ -22,7 +22,7 @@ namespace EduInfoPortalBlazor.Models
 
 
     // Направление обучения
-    public enum Direction
+    public enum FacultyDirection
     {
         [Display(Name = "Гражданский")]
         Civil,

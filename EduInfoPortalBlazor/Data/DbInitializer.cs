@@ -58,9 +58,9 @@ namespace EduInfoPortalBlazor.Data
             {
                 var institutions = new Institution[]
                 {
-                    new Institution { Name ="Петрозаводское президентское кадетсое училище",Index=185000, Address ="185000, Комсомольский проспект, дом 11"},
-                    new Institution { Name = "Оренбургское президентское кадетское училище",Index=200100, Address = "460010, ул.Пушкинская, д.63" },
-                    new Institution { Name = "Ставропольское президентское кадетское училище", Index=300200, Address = "355017, ул. Ленина, д.320" }
+                    new Institution { Name ="Петрозаводское президентское кадетсое училище",Index="185000", Address ="Комсомольский проспект, дом 11"},
+                    new Institution { Name = "Оренбургское президентское кадетское училище",Index="200100", Address = "ул.Пушкинская, д.63" },
+                    new Institution { Name = "Ставропольское президентское кадетское училище", Index="300200", Address = "ул. Ленина, д.320" }
                 };
 
                 context.Institutions.AddRange(institutions);

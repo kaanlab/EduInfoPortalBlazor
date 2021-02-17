@@ -52,7 +52,7 @@ namespace EduInfoPortalBlazor.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Index = table.Column<int>(type: "INTEGER", maxLength: 6, nullable: false),
+                    Index = table.Column<string>(type: "TEXT", maxLength: 6, nullable: false),
                     Address = table.Column<string>(type: "TEXT", nullable: true),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     CityId = table.Column<int>(type: "INTEGER", nullable: false)

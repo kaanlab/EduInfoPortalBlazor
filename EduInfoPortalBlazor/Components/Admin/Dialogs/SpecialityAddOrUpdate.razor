@@ -1,0 +1,112 @@
+﻿@using System.Collections.Immutable
+@using EduInfoPortalBlazor.Extensions
+@inject StorageService Storage
+
+<MudDialog>
+    <DialogContent>
+        <EditForm EditContext="@editContext">
+            <DataAnnotationsValidator />
+
+            <MudTextField Label="Код" @bind-Value="Specialty.Code" For="@(() => Specialty.Code)" />
+            <MudTextField Label="Профиль" @bind-Value="Specialty.Profile" For="@(() => Specialty.Profile)" />
+            <MudTextField Label="Колличество бюджетных мест" @bind-Value="Specialty.BudgetPlaces" For="@(() => Specialty.BudgetPlaces)" />
+            <MudTextField Label="Мин.количество баллов на бюджетные места" @bind-Value="Specialty.BudgetMinScore" For="@(() => Specialty.BudgetMinScore)" />
+            <MudTextField Label="Количество платных мест" @bind-Value="Specialty.PaidPlaces" For="@(() => Specialty.PaidPlaces)" />
+            <MudTextField Label="Мин.количество баллов на платные места" @bind-Value="Specialty.PaidMinScore" For="@(() => Specialty.PaidMinScore)" />
+            <MudTextField Label="Стоимость обучения" @bind-Value="Specialty.Cost" For="@(() => Specialty.Cost)" />
+            <MudItem xs="12" md="12">
+
+                @if (exams.Any())
+                {
+                    <MudSelect T="Exam" Label="Экзамены" HelperText="Выберите экзамены" MultiSelection="true" @bind-Value="examValue" @bind-SelectedValues="selectedExams" ToStringFunc="examConverter">
+                        @foreach (var exam in exams)
+                        {
+                            <MudSelectItem T="Exam" Value="exam">@exam.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudSelect Disabled="true" Label="Таблица города пустая..." HelperText="Выберите город" T="string" />
+                }
+
+            </MudItem>
+
+            <MudItem xs="12" md="12">
+
+                @if (professions.Any())
+                {
+                    <MudSelect T="Profession" Label="Профессии" HelperText="Выберите профессии" MultiSelection="true" @bind-Value="professionValue" @bind-SelectedValues="selectedProfessions" ToStringFunc="professionConverter">
+                        @foreach (var profession in professions)
+                        {
+                            <MudSelectItem T="Profession" Value="profession">@profession.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudSelect Disabled="true" Label="Таблица факультеты пустая..." HelperText="Выберите факультеты" T="string" />
+                }
+
+            </MudItem>
+
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отменить</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Color="Color.Info" OnClick="AddOrUpdate" Disabled="@formInvalid">Сохранить</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Specialty Specialty { get; set; } = new Specialty();
+
+    private ImmutableArray<Exam> exams;
+    private Exam examValue { get; set; } = new Exam() { };
+    private HashSet<Exam> selectedExams { get; set; } = new HashSet<Exam>() { };
+
+    private ImmutableArray<Profession> professions;
+    private Profession professionValue { get; set; } = new Profession() { };
+    private HashSet<Profession> selectedProfessions { get; set; } = new HashSet<Profession>() { };
+
+    private bool formInvalid = true;
+    private EditContext editContext;
+
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Specialty);
+        editContext.OnFieldChanged += HandleFieldChanged;
+
+        exams = Storage.GetExams().ToImmutableArray();
+        if (Specialty.Exams is { })
+            selectedExams = Specialty.Exams.ToHashSet();
+
+        professions = Storage.GetProfessions().ToImmutableArray();
+        if (Specialty.Professions is { })
+            selectedProfessions = Specialty.Professions.ToHashSet();
+    }
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        formInvalid = !editContext.Validate();
+        StateHasChanged();
+    }
+
+    void AddOrUpdate()
+    {
+        Specialty.Exams = selectedExams;
+        Specialty.Professions = selectedProfessions;
+        MudDialog.Close(DialogResult.Ok(Specialty));
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+    Func<Exam, string> examConverter = p => p?.Name;
+    Func<Profession, string> professionConverter = p => p?.Name;
+}

@@ -61,7 +61,7 @@ namespace EduInfoPortalBlazor.Data
 
         public async Task<Institution> AddInstitution(Institution institution)
         {
-            var city = await this.Cities.FirstOrDefaultAsync(o => o.Id == institution.City.Id);
+            //var city = await this.Cities.FirstOrDefaultAsync(o => o.Id == institution.City.Id);
             var newInstitution = new Institution()
             {
                 Name = institution.Name,
@@ -71,7 +71,7 @@ namespace EduInfoPortalBlazor.Data
             var addedInstitution = await this.Institutions.AddAsync(newInstitution);
             await this.SaveChangesAsync();
 
-            addedInstitution.Entity.City = city;
+            addedInstitution.Entity.City = institution.City;
             var institutionEntry = this.Institutions.Update(addedInstitution.Entity);
             await this.SaveChangesAsync();
 
@@ -80,13 +80,14 @@ namespace EduInfoPortalBlazor.Data
 
         public async Task<Institution> UpdateInstitution(Institution institution)
         {
-            var city = await this.Cities.FirstOrDefaultAsync(o => o.Id == institution.City.Id);
+            //var city = await this.Cities.FirstOrDefaultAsync(o => o.Id == institution.City.Id);
             var updatedInstitution = await this.Institutions.FirstOrDefaultAsync(o => o.Id == institution.Id);
 
             updatedInstitution.Address = institution.Address;
-            updatedInstitution.City = city;
+            updatedInstitution.City = institution.City;
             updatedInstitution.Name = institution.Name;
             updatedInstitution.Type = institution.Type;
+            updatedInstitution.Faculties = institution.Faculties;
             var institutionEntry = this.Institutions.Update(updatedInstitution);
             await this.SaveChangesAsync();
 
@@ -169,6 +170,55 @@ namespace EduInfoPortalBlazor.Data
 
 
         #region Specialities
+        public DbSet<Specialty> Specialties { get; set; }
+
+        public IQueryable<Specialty> GetSpecialties() => this.Specialties.Include(o => o.Exams).Include(o => o.Professions).AsNoTracking().AsQueryable();
+
+        public async Task<Specialty> AddSpecialty(Specialty specialty)
+        {
+            var newSpeciality = new Specialty()
+            {
+                Code = specialty.Code,
+                Profile = specialty.Profile,
+                BudgetPlaces = specialty.BudgetPlaces,
+                BudgetMinScore = specialty.BudgetMinScore,
+                PaidPlaces = specialty.PaidPlaces,
+                PaidMinScore = specialty.PaidMinScore
+            };
+            var addedSpeciality = await this.Specialties.AddAsync(newSpeciality);
+            await this.SaveChangesAsync();
+
+            addedSpeciality.Entity.Exams = specialty.Exams;
+            addedSpeciality.Entity.Professions = specialty.Professions;
+
+            var specialityEntry = this.Specialties.Update(addedSpeciality.Entity);
+            await this.SaveChangesAsync();
+            return specialityEntry.Entity;
+        }
+
+        public async Task<Specialty> UpdateSpecialty(Specialty specialty)
+        {
+            var updatedSpeciality = await this.Specialties.FirstOrDefaultAsync(o => o.Id == specialty.Id);
+            updatedSpeciality.Code = specialty.Code;
+            updatedSpeciality.Profile = specialty.Profile;
+            updatedSpeciality.BudgetPlaces = specialty.BudgetPlaces;
+            updatedSpeciality.BudgetMinScore = specialty.BudgetMinScore;
+            updatedSpeciality.PaidPlaces = specialty.PaidPlaces;
+            updatedSpeciality.PaidMinScore = specialty.PaidMinScore;
+            updatedSpeciality.Exams = specialty.Exams;
+            updatedSpeciality.Professions = specialty.Professions;
+            var specialityEntry = this.Specialties.Update(updatedSpeciality);
+            await this.SaveChangesAsync();
+            return specialityEntry.Entity;
+        }
+
+        public async Task<Specialty> DeleteSpecialty(Specialty specialty)
+        {
+            var deletedSpeciality = await this.Specialties.FirstOrDefaultAsync(o => o.Id == specialty.Id);
+            var specialityEntry = this.Specialties.Remove(deletedSpeciality);
+            await this.SaveChangesAsync();
+            return specialityEntry.Entity;
+        }
         #endregion
 
 

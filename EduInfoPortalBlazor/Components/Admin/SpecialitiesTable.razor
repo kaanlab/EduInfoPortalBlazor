@@ -1,0 +1,118 @@
+﻿@inject ISnackbar Snackbar
+@inject IDialogService Dialog
+@inject StorageService Storage
+
+<MudTable Class="my-5" Items="@specialties" Hover="true">
+    <ToolBarContent>
+        <MudIconButton Icon="@Icons.Material.Filled.AddBox" Color="Color.Primary" Size="Size.Large" @onclick="AddSpeciality" Class="mr-3" />
+        <MudText Typo="Typo.h6">Специальности</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Код</MudTh>
+        <MudTh>Профиль</MudTh>
+        <MudTh>Бюджетные места</MudTh>
+        <MudTh>Мин. колличество баллов для бюджетных мест</MudTh>
+        <MudTh>Платные места</MudTh>
+        <MudTh>Мин. колличество баллов для платных мест</MudTh>
+        <MudTh>Стоимость</MudTh>
+        <MudTh>Факультет</MudTh>
+        <MudTh>Стоимость</MudTh>
+        <MudTh>Необходимые экзамены</MudTh>
+        <MudTh>Профессии</MudTh>
+        <MudTh></MudTh>
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Код">@context.Code</MudTd>
+        <MudTd DataLabel="Профиль">@context.Profile</MudTd>
+        <MudTd DataLabel="Бюджетные места">@context.BudgetPlaces</MudTd>
+        <MudTd DataLabel="Мин. колличество баллов для бюджетных мест">@context.BudgetMinScore</MudTd>
+        <MudTd DataLabel="Платные места">@context.PaidPlaces</MudTd>
+        <MudTd DataLabel="Мин. колличество баллов для платных мест">@context.PaidMinScore</MudTd>
+        <MudTd DataLabel="Стоимость">@context.Cost</MudTd>
+        <MudTd DataLabel="Факультет">@context.Faculty</MudTd>
+        <MudTd DataLabel="Необходимые экзамены">
+            @if (context.Exams is { })
+            {
+                @foreach (var exam in context.Exams)
+                {
+                    <MudChip Text="purple" Color="Color.Primary">@exam.Name</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip Text="red" Color="Color.Error">экзамены отсутствуют</MudChip>
+            }
+        </MudTd>
+        <MudTd DataLabel="Профессии">
+            @if (context.Professions is { })
+            {
+                @foreach (var profession in context.Professions)
+                {
+                    <MudChip Text="purple" Color="Color.Primary">@profession.Name</MudChip>
+                }
+            }
+            else
+            {
+                <MudChip Text="red" Color="Color.Error">профессии отсутствуют</MudChip>
+            }
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Info" OnClick="@((e) => UpdateSpeciality(context))" />
+        </MudTd>
+        <MudTd>
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="@((e) => DeleteSpeciality(context))" />
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+
+    private IList<Specialty> specialties = null;
+
+
+    protected override void OnInitialized()
+    {
+        specialties = Storage.GetSpecialties().ToList();
+    }
+
+    private async Task AddSpeciality()
+    {
+        var dialog = Dialog.Show<SpecialityAddOrUpdate>("Новая специализация");
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var addedSpeciality = await Storage.AddSpecialty(dialog.Result.Result.Data as Specialty);
+            specialties.Add(addedSpeciality);
+            Snackbar.Add("Новая профессия добавлена!", Severity.Success);
+        }
+    }
+
+    private async Task UpdateSpeciality(Specialty specialty)
+    {
+        var parameters = new DialogParameters { ["specialty"] = specialty };
+        var dialog = Dialog.Show<SpecialityAddOrUpdate>("Редактирование специализации", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var updatedSpeciality = await Storage.UpdateSpecialty(dialog.Result.Result.Data as Specialty);
+            var index = specialties.IndexOf(specialty);
+            specialties.Remove(specialty);
+            specialties.Insert(index, updatedSpeciality);
+            Snackbar.Add("Информация о специализации успешно обновлена!", Severity.Success);
+        }
+    }
+
+    private async Task DeleteSpeciality(Specialty specialty)
+    {
+        var parameters = new DialogParameters { ["specialty"] = specialty };
+        var dialog = Dialog.Show<SpecialityDelete>("Удаление специализации", parameters);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var deletedSpeciality = await Storage.DeleteSpecialty(dialog.Result.Result.Data as Specialty);
+            specialties.Remove(deletedSpeciality);
+            Snackbar.Add("Специализация успешно удалена!", Severity.Success);
+        }
+    }
+}

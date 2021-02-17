@@ -3,14 +3,16 @@ using System;
 using EduInfoPortalBlazor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EduInfoPortalBlazor.Migrations
 {
     [DbContext(typeof(StorageService))]
-    partial class StorageServiceModelSnapshot : ModelSnapshot
+    [Migration("20210217133149_AddSpecialtiesTable")]
+    partial class AddSpecialtiesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
