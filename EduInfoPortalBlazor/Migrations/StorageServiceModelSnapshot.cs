@@ -38,6 +38,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -59,6 +60,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -75,15 +77,14 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("CityId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Index")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -106,6 +107,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -126,6 +128,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Cost")
@@ -144,6 +147,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Profile")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

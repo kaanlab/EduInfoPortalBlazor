@@ -25,7 +25,7 @@ namespace EduInfoPortalBlazor.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,7 +38,7 @@ namespace EduInfoPortalBlazor.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,10 +52,10 @@ namespace EduInfoPortalBlazor.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Index = table.Column<string>(type: "TEXT", maxLength: 6, nullable: false),
-                    Address = table.Column<string>(type: "TEXT", nullable: true),
+                    Index = table.Column<int>(type: "INTEGER", nullable: false),
+                    Address = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
-                    CityId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CityId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -65,7 +65,7 @@ namespace EduInfoPortalBlazor.Migrations
                         column: x => x.CityId,
                         principalTable: "Cities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,7 +74,7 @@ namespace EduInfoPortalBlazor.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Direction = table.Column<string>(type: "TEXT", nullable: false),
                     InstitutionId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -90,13 +90,13 @@ namespace EduInfoPortalBlazor.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Specialty",
+                name: "Specialties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Code = table.Column<string>(type: "TEXT", nullable: true),
-                    Profile = table.Column<string>(type: "TEXT", nullable: true),
+                    Code = table.Column<string>(type: "TEXT", nullable: false),
+                    Profile = table.Column<string>(type: "TEXT", nullable: false),
                     BudgetPlaces = table.Column<int>(type: "INTEGER", nullable: false),
                     BudgetMinScore = table.Column<int>(type: "INTEGER", nullable: false),
                     PaidPlaces = table.Column<int>(type: "INTEGER", nullable: false),
@@ -107,9 +107,9 @@ namespace EduInfoPortalBlazor.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Specialty", x => x.Id);
+                    table.PrimaryKey("PK_Specialties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Specialty_Faculties_FacultyId",
+                        name: "FK_Specialties_Faculties_FacultyId",
                         column: x => x.FacultyId,
                         principalTable: "Faculties",
                         principalColumn: "Id",
@@ -133,9 +133,9 @@ namespace EduInfoPortalBlazor.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ExamSpecialty_Specialty_SpecialtiesId",
+                        name: "FK_ExamSpecialty_Specialties_SpecialtiesId",
                         column: x => x.SpecialtiesId,
-                        principalTable: "Specialty",
+                        principalTable: "Specialties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -157,9 +157,9 @@ namespace EduInfoPortalBlazor.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProfessionSpecialty_Specialty_SpecialtiesId",
+                        name: "FK_ProfessionSpecialty_Specialties_SpecialtiesId",
                         column: x => x.SpecialtiesId,
-                        principalTable: "Specialty",
+                        principalTable: "Specialties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -185,8 +185,8 @@ namespace EduInfoPortalBlazor.Migrations
                 column: "SpecialtiesId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Specialty_FacultyId",
-                table: "Specialty",
+                name: "IX_Specialties_FacultyId",
+                table: "Specialties",
                 column: "FacultyId");
         }
 
@@ -205,7 +205,7 @@ namespace EduInfoPortalBlazor.Migrations
                 name: "Professions");
 
             migrationBuilder.DropTable(
-                name: "Specialty");
+                name: "Specialties");
 
             migrationBuilder.DropTable(
                 name: "Faculties");

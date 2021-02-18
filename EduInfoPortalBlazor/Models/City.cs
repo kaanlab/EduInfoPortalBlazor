@@ -10,8 +10,8 @@ namespace EduInfoPortalBlazor.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Это поле обязательно для заполнения, миннимальная длина 2 символа")]
-        [MinLength(2)]
+        [Required(ErrorMessage = "Это поле обязательно для заполнения")]
+        [MinLength(2, ErrorMessage = "Миннимальная длина 2 символа")]
         public string Name { get; set; }
 
         //

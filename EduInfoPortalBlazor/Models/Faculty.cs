@@ -12,6 +12,8 @@ namespace EduInfoPortalBlazor.Models
     public class Faculty
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "Это поле обязательно для заполнения")]
+        [MinLength(4, ErrorMessage = "Миннимальная длина 4 символа")]
         public string Name { get; set; }
         public FacultyDirection Direction { get; set; }
 

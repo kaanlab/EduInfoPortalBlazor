@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduInfoPortalBlazor.Migrations
 {
     [DbContext(typeof(StorageService))]
-    [Migration("20210217083817_InitMigration")]
+    [Migration("20210218134608_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,6 +40,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -61,6 +62,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -77,15 +79,14 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CityId")
+                    b.Property<int?>("CityId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Index")
-                        .IsRequired()
-                        .HasMaxLength(6)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -108,6 +109,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -128,6 +130,7 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Cost")
@@ -146,13 +149,14 @@ namespace EduInfoPortalBlazor.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Profile")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FacultyId");
 
-                    b.ToTable("Specialty");
+                    b.ToTable("Specialties");
                 });
 
             modelBuilder.Entity("ExamSpecialty", b =>
@@ -198,9 +202,7 @@ namespace EduInfoPortalBlazor.Migrations
                 {
                     b.HasOne("EduInfoPortalBlazor.Models.City", "City")
                         .WithMany("Institutions")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CityId");
 
                     b.Navigation("City");
                 });

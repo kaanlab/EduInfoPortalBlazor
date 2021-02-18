@@ -13,9 +13,10 @@ namespace EduInfoPortalBlazor.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "Это поле обязательно для заполнения! ")]
         [RegularExpression("([0-9]+)", ErrorMessage = "В этом поле разрешены только цифры!")]
-        [MinLength(6, ErrorMessage = "Введите 6 цифр")] 
-        [MaxLength(6, ErrorMessage = "Введите 6 цифр")]
-        public string Index { get; set; }
+        [Range(0,999999, ErrorMessage = "Введите 6 цифр")] 
+        public int Index { get; set; }
+        [Required(ErrorMessage = "Это поле обязательно для заполнения")]
+        [MinLength(4, ErrorMessage = "Миннимальная длина 4 символа")]
         public string Address { get; set; }
         public InstitutionType Type { get; set; }
 
