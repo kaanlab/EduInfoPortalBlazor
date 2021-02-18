@@ -72,8 +72,8 @@ namespace EduInfoPortalBlazor.Data
 
             var city = await this.Cities.FirstOrDefaultAsync(o => o.Id == institution.City.Id);
             addedInstitution.Entity.City = city;
-            var faculties = await this.Faculties.Where();
-            addedInstitution.Entity.Faculties = faculties;
+            //var faculties = await this.Faculties.Where();
+            //addedInstitution.Entity.Faculties = faculties;
             var institutionEntry = this.Institutions.Update(addedInstitution.Entity);
             await this.SaveChangesAsync();
 
@@ -90,8 +90,8 @@ namespace EduInfoPortalBlazor.Data
             updatedInstitution.City = city;
             updatedInstitution.Name = institution.Name;
             updatedInstitution.Type = institution.Type;
-            var faculties = await this.Faculties.Where();
-            updatedInstitution.Faculties = faculties;
+            //var faculties = await this.Faculties.Where();
+            //updatedInstitution.Faculties = faculties;
             var institutionEntry = this.Institutions.Update(updatedInstitution);
             await this.SaveChangesAsync();
 
