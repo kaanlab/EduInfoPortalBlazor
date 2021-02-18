@@ -2,7 +2,7 @@
     <DialogContent>
         <EditForm EditContext="@editContext">
             <DataAnnotationsValidator />
-            <MudTextField Label="Название" @bind-Value="Exam.Name" For="@(() => Exam.Name)" />
+            <MudTextField Label="Название" @bind-Value="exam.Name" For="@(() => exam.Name)" />
         </EditForm>
     </DialogContent>
     <DialogActions>
@@ -12,12 +12,13 @@
 </MudDialog>
 
 @code {
-
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public Exam Exam { get; set; } = new Exam();
+    public Exam Exam { get; set; }
+
+    Exam exam = new Exam();
 
     private bool formInvalid = true;
     private EditContext editContext;
@@ -25,7 +26,10 @@
 
     protected override void OnInitialized()
     {
-        editContext = new EditContext(Exam);
+        if (Exam is { })
+            exam = new Exam() { Id = Exam.Id, Name = Exam.Name};
+
+        editContext = new EditContext(exam);
         editContext.OnFieldChanged += HandleFieldChanged;
     }
 
@@ -35,7 +39,10 @@
         StateHasChanged();
     }
 
-    void AddOrUpdate() => MudDialog.Close(DialogResult.Ok(Exam));
+    void AddOrUpdate()
+    {
+        MudDialog.Close(DialogResult.Ok(exam));
+    }
 
     void Cancel() => MudDialog.Cancel();
 }

@@ -126,6 +126,7 @@ namespace EduInfoPortalBlazor.Data
         public async Task<Exam> UpdateExam(Exam exam)
         {
             var updatedExam = await this.Exams.FirstOrDefaultAsync(o => o.Id == exam.Id);
+            updatedExam.Name = exam.Name;
             var examEntry = this.Exams.Update(updatedExam);
             await this.SaveChangesAsync();
             return examEntry.Entity;
