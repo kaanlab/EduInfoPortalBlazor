@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>0.1.0.0</AssemblyVersion>
-    <FileVersion>0.1.0.0</FileVersion>
-    <InformationalVersion>0.1.0-beta.1+10.Branch.main.Sha.cdbd61eeb113aeeae5eef7204e14fb61c012cf30</InformationalVersion>
-    <Version>0.1.0-beta0001</Version>
+    <AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <FileVersion>0.2.0.0</FileVersion>
+    <InformationalVersion>0.2.0+Branch.main.Sha.39880f0a555cfcfd557d74efe448f242b88cf343</InformationalVersion>
+    <Version>0.2.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
