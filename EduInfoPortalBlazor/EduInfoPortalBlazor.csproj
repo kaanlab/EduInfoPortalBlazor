@@ -3,7 +3,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <AssemblyVersion>0.2.1.0</AssemblyVersion>
     <FileVersion>0.2.1.0</FileVersion>
-    <InformationalVersion>0.2.1-beta.1+2.Branch.main.Sha.4c05922378707cccd2f1afeb337cbe0161ee2a7c</InformationalVersion>
+    <InformationalVersion>0.2.1-beta.1+3.Branch.main.Sha.1eee15f9d7da622740526e3f7be0974336dc6247</InformationalVersion>
     <Version>0.2.1-beta0001</Version>
   </PropertyGroup>
   <ItemGroup>
