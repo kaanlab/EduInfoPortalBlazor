@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <AssemblyVersion>0.1.0.0</AssemblyVersion>
+    <FileVersion>0.1.0.0</FileVersion>
+    <InformationalVersion>0.1.0-beta.1+9.Branch.main.Sha.6b6f01736680e9bd11003a2326f956e4e17e0365</InformationalVersion>
+    <Version>0.1.0-beta0001</Version>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.3" />
@@ -13,5 +15,4 @@
     </PackageReference>
     <PackageReference Include="MudBlazor" Version="5.0.1" />
   </ItemGroup>
-
 </Project>
